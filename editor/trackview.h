@@ -111,7 +111,7 @@ private:
 
 	void invalidateRow(int row)
 	{
-		invalidateRange(0, getTrackCount(), row, row);
+		invalidateRange(0, page->getTrackCount(), row, row);
 	}
 
 	void invalidateTrack(int track)
@@ -121,7 +121,7 @@ private:
 
 	void invalidateAll()
 	{
-		invalidateRange(0, getTrackCount(), 0, getRows());
+		invalidateRange(0, page->getTrackCount(), 0, getRows());
 	}
 
 	QRect getSelection() const
@@ -139,8 +139,6 @@ private:
 
 	int getTrackFromLogicalX(int x) const;
 	int getTrackFromPhysicalX(int x) const;
-
-	int getTrackCount() const;
 
 	int selectStartTrack, selectStopTrack;
 	int selectStartRow, selectStopRow;

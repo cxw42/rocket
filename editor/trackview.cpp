@@ -148,13 +148,13 @@ void TrackView::paintTopMargin(QPainter &painter, const QRect &rcTracks)
 	QRect topRightMargin;
 	topRightMargin.setTop(-1);
 	topRightMargin.setBottom(topMarginHeight - 1);
-	topRightMargin.setLeft(getPhysicalX(getTrackCount()) - 1);
+	topRightMargin.setLeft(getPhysicalX(page->getTrackCount()) - 1);
 	topRightMargin.setRight(rcTracks.right() + 1);
 	painter.fillRect(topRightMargin, palette().button());
 	qDrawWinButton(&painter, topRightMargin, palette());
 
-	int startTrack = qBound(0, getTrackFromPhysicalX(qMax(rcTracks.left(), leftMarginWidth)), getTrackCount());
-	int endTrack   = qBound(0, getTrackFromPhysicalX(rcTracks.right()) + 1, getTrackCount());
+	int startTrack = qBound(0, getTrackFromPhysicalX(qMax(rcTracks.left(), leftMarginWidth)), page->getTrackCount());
+	int endTrack   = qBound(0, getTrackFromPhysicalX(rcTracks.right()) + 1, page->getTrackCount());
 
 	for (int track = startTrack; track < endTrack; ++track) {
 		const SyncTrack *t = page->getTrack(track);
@@ -227,8 +227,8 @@ void TrackView::paintTracks(QPainter &painter, const QRect &rcTracks)
 	firstRow = qBound(0, firstRow, getRows() - 1);
 	lastRow  = qBound(0, lastRow,  getRows() - 1);
 
-	int startTrack = qBound(0, getTrackFromPhysicalX(qMax(rcTracks.left(), leftMarginWidth)), getTrackCount());
-	int endTrack   = qBound(0, getTrackFromPhysicalX(rcTracks.right()) + 1, getTrackCount());
+	int startTrack = qBound(0, getTrackFromPhysicalX(qMax(rcTracks.left(), leftMarginWidth)), page->getTrackCount());
+	int endTrack   = qBound(0, getTrackFromPhysicalX(rcTracks.right()) + 1, page->getTrackCount());
 
 	QRect topPadding(QPoint(rcTracks.left(), qMax(rcTracks.top(), topMarginHeight)),
 			 QPoint(rcTracks.right(), getPhysicalY(0) - 1));
@@ -246,7 +246,7 @@ void TrackView::paintTracks(QPainter &painter, const QRect &rcTracks)
 	for (int track = startTrack; track < endTrack; ++track)
 		paintTrack(painter, rcTracks, track);
 
-	QRect rightMargin(QPoint(getPhysicalX(getTrackCount()), getPhysicalY(0)),
+	QRect rightMargin(QPoint(getPhysicalX(page->getTrackCount()), getPhysicalY(0)),
 	                  QPoint(rcTracks.right(), getPhysicalY(getRows()) - 1));
 	painter.fillRect(rightMargin, palette().dark());
 }
@@ -342,7 +342,7 @@ void TrackView::mouseMoveEvent(QMouseEvent *event)
 {
 	int track = getTrackFromPhysicalX(event->pos().x());
 	if (dragging) {
-		const int trackCount = getTrackCount();
+		const int trackCount = page->getTrackCount();
 
 		if (track < 0 || track >= trackCount)
 			return;
@@ -362,7 +362,7 @@ void TrackView::mouseMoveEvent(QMouseEvent *event)
 		}
 	} else {
 		if (event->pos().y() < topMarginHeight &&
-		    track >= 0 && track < getTrackCount()) {
+		    track >= 0 && track < page->getTrackCount()) {
 			setCursor(handCursor);
 		} else
 			setCursor(QCursor(Qt::ArrowCursor));
@@ -374,7 +374,7 @@ void TrackView::mousePressEvent(QMouseEvent *event)
 	int track = getTrackFromPhysicalX(event->pos().x());
 	if (event->button() == Qt::LeftButton &&
 	    event->pos().y() < topMarginHeight &&
-	    track >= 0 && track < getTrackCount()) {
+	    track >= 0 && track < page->getTrackCount()) {
 		dragging = true;
 		anchorTrack = track;
 	}
@@ -397,7 +397,7 @@ struct CopyEntry
 
 void TrackView::editCopy()
 {
-	if (0 == getTrackCount()) {
+	if (!page->getTrackCount()) {
 		QApplication::beep();
 		return;
 	}
@@ -436,7 +436,7 @@ void TrackView::editCopy()
 
 void TrackView::editCut()
 {
-	if (0 == getTrackCount()) {
+	if (!page->getTrackCount()) {
 		QApplication::beep();
 		return;
 	}
@@ -449,7 +449,7 @@ void TrackView::editPaste()
 {
 	SyncDocument *doc = page->getDocument();
 
-	if (0 == getTrackCount()) {
+	if (!page->getTrackCount()) {
 		QApplication::beep();
 		return;
 	}
@@ -468,7 +468,8 @@ void TrackView::editPaste()
 		doc->beginMacro("paste");
 		for (int i = 0; i < buffer_width; ++i) {
 			int trackPos = editTrack + i;
-			if (trackPos >= getTrackCount()) continue;
+			if (trackPos >= page->getTrackCount())
+				continue;
 
 			SyncTrack *t = page->getTrack(trackPos);
 			for (int j = 0; j < buffer_height; ++j) {
@@ -491,7 +492,7 @@ void TrackView::editPaste()
 			Q_ASSERT(ce.keyFrame.row < buffer_height);
 
 			int trackPos = editTrack + ce.track;
-			if (trackPos < getTrackCount()) {
+			if (trackPos < page->getTrackCount()) {
 				SyncTrack *t = page->getTrack(trackPos);
 				SyncTrack::TrackKey key = ce.keyFrame;
 				key.row += editRow;
@@ -538,7 +539,7 @@ void TrackView::editRedo()
 
 void TrackView::selectAll()
 {
-	selectStartTrack = getTrackCount() - 1;
+	selectStartTrack = page->getTrackCount() - 1;
 	selectStopTrack = editTrack = 0;
 	selectStartRow = getRows() - 1;
 	selectStopRow = editRow = 0;
@@ -555,7 +556,7 @@ void TrackView::selectTrack()
 
 void TrackView::selectRow()
 {
-	selectStartTrack = getTrackCount() - 1;
+	selectStartTrack = page->getTrackCount() - 1;
 	selectStopTrack = editTrack = 0;
 	selectStartRow = selectStopRow = editRow;
 	invalidateAll();
@@ -569,7 +570,7 @@ void TrackView::setupScrollBars()
 	verticalScrollBar()->setMaximum(getRows() - 1);
 	verticalScrollBar()->setPageStep(windowRows);
 
-	int contentWidth = getTrackCount() * trackWidth;
+	int contentWidth = page->getTrackCount() * trackWidth;
 	int viewWidth = qMax(viewport()->width() - leftMarginWidth, 0);
 	horizontalScrollBar()->setValue(editTrack * trackWidth);
 	horizontalScrollBar()->setRange(0, contentWidth - viewWidth);
@@ -636,13 +637,14 @@ void TrackView::setEditRow(int newEditRow, bool selecting)
 
 void TrackView::setEditTrack(int newEditTrack, bool autoscroll, bool selecting)
 {
-	if (0 == getTrackCount()) return;
+	if (!page->getTrackCount())
+		return;
 
 	int oldEditTrack = editTrack;
 	editTrack = newEditTrack;
 
 	// clamp to document
-	editTrack = qBound(0, editTrack, getTrackCount() - 1);
+	editTrack = qBound(0, editTrack, page->getTrackCount() - 1);
 
 	if (oldEditTrack != editTrack)
 	{
@@ -691,11 +693,6 @@ int TrackView::getRows() const
 	return page->getDocument()->getRows();
 }
 
-int TrackView::getTrackCount() const
-{
-	return page->getTrackCount();
-};
-
 void TrackView::onVScroll(int value)
 {
 	setEditRow(value);
@@ -717,7 +714,7 @@ void TrackView::editEnterValue()
 	if (!lineEdit->isVisible())
 		return;
 
-	if (lineEdit->text().length() > 0 && editTrack < getTrackCount()) {
+	if (lineEdit->text().length() > 0 && editTrack < page->getTrackCount()) {
 		SyncTrack *t = page->getTrack(editTrack);
 
 		SyncTrack::TrackKey newKey;
@@ -744,7 +741,7 @@ void TrackView::editToggleInterpolationType()
 {
 	SyncDocument *doc = page->getDocument();
 
-	if (editTrack < getTrackCount()) {
+	if (editTrack < page->getTrackCount()) {
 		SyncTrack *t = page->getTrack(editTrack);
 		QMap<int, SyncTrack::TrackKey> keyMap = t->getKeyMap();
 
@@ -781,8 +778,9 @@ void TrackView::editClear()
 
 	QRect selection = getSelection();
 
-	if (0 == getTrackCount()) return;
-	Q_ASSERT(selection.right() < getTrackCount());
+	if (!page->getTrackCount())
+		return;
+	Q_ASSERT(selection.right() < page->getTrackCount());
 
 	doc->beginMacro("clear");
 	for (int track = selection.left(); track <= selection.right(); ++track) {
@@ -805,7 +803,7 @@ void TrackView::editBiasValue(float amount)
 	if (!doc)
 		return;
 
-	if (0 == getTrackCount()) {
+	if (!page->getTrackCount()) {
 		QApplication::beep();
 		return;
 	}
@@ -814,7 +812,7 @@ void TrackView::editBiasValue(float amount)
 
 	doc->beginMacro("bias");
 	for (int track = selection.left(); track <= selection.right(); ++track) {
-		Q_ASSERT(track < getTrackCount());
+		Q_ASSERT(track < page->getTrackCount());
 		SyncTrack *t = page->getTrack(track);
 
 		for (int row = selection.top(); row <= selection.bottom(); ++row) {
@@ -871,7 +869,7 @@ void TrackView::keyPressEvent(QKeyEvent *event)
 				} else
 					QApplication::beep();
 			}
-			if (0 != getTrackCount())
+			if (page->getTrackCount() > 0)
 				setEditTrack(editTrack - 1, true, selecting);
 			else
 				QApplication::beep();
@@ -883,13 +881,13 @@ void TrackView::keyPressEvent(QKeyEvent *event)
 			// FALLTHROUGH
 		case Qt::Key_Right:
 			if (ctrlDown) {
-				if (getTrackCount() > editTrack + 1) {
+				if (page->getTrackCount() > editTrack + 1) {
 					page->swapTrackOrder(editTrack, editTrack + 1);
 					viewport()->update();
 				} else
 					QApplication::beep();
 			}
-			if (0 != getTrackCount())
+			if (page->getTrackCount() > 0)
 				setEditTrack(editTrack + 1, true, selecting);
 			else
 				QApplication::beep();
@@ -901,7 +899,7 @@ void TrackView::keyPressEvent(QKeyEvent *event)
 		switch (event->key()) {
 		case Qt::Key_Up:
 			if (ctrlDown) {
-				if (getTrackCount() > editTrack)
+				if (page->getTrackCount() > editTrack)
 					editBiasValue(shiftDown ? 0.1f : 1.0f);
 				else
 					QApplication::beep();
@@ -911,7 +909,7 @@ void TrackView::keyPressEvent(QKeyEvent *event)
 
 		case Qt::Key_Down:
 			if (ctrlDown) {
-				if (getTrackCount() > editTrack)
+				if (page->getTrackCount() > editTrack)
 					editBiasValue(shiftDown ? -0.1f : -1.0f);
 				else
 					QApplication::beep();
@@ -942,7 +940,7 @@ void TrackView::keyPressEvent(QKeyEvent *event)
 
 		case Qt::Key_End:
 			if (ctrlDown)
-				setEditTrack(getTrackCount() - 1);
+				setEditTrack(page->getTrackCount() - 1);
 			else
 				setEditRow(getRows() - 1, selecting);
 			return;
