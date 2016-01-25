@@ -11,6 +11,7 @@ class QTcpServer;
 class QWebSocketServer;
 
 class SyncDocument;
+class SyncPage;
 class TrackView;
 class ClientSocket;
 
@@ -39,7 +40,10 @@ public:
 
 	ClientSocket *clientSocket;
 
+	SyncDocument *doc;
+
 	TrackView *trackView;
+
 	QLabel *statusPos, *statusValue, *statusKeyType;
 	QMenu *fileMenu, *recentFilesMenu, *editMenu;
 	QAction *recentFileActions[5];

@@ -11,6 +11,14 @@ SyncDocument::~SyncDocument()
 		delete tracks[i];
 }
 
+SyncTrack *SyncDocument::createTrack(const QString &name)
+{
+	SyncTrack *t = new SyncTrack(name);
+	tracks.append(t);
+	defaultSyncPage.addTrack(t);
+	return t;
+}
+
 SyncDocument *SyncDocument::load(const QString &fileName)
 {
 	SyncDocument *ret = new SyncDocument;
@@ -100,7 +108,7 @@ bool SyncDocument::save(const QString &fileName)
 	QDomElement tracksNode =
 	    doc.createElement("tracks");
 	for (int i = 0; i < getTrackCount(); ++i) {
-		const SyncTrack *t = getTrack(trackOrder[i]);
+		const SyncTrack *t = defaultSyncPage.getTrack(i);
 
 		QDomElement trackElem =
 		    doc.createElement("track");
@@ -168,19 +176,6 @@ bool SyncDocument::save(const QString &fileName)
 
 	undoStack.setClean();
 	return true;
-}
-
-int SyncDocument::getTrackIndexFromPos(int track) const
-{
-	Q_ASSERT(track < trackOrder.size());
-	return trackOrder[track];
-}
-
-void SyncDocument::swapTrackOrder(int t1, int t2)
-{
-	Q_ASSERT(t1 < trackOrder.size());
-	Q_ASSERT(t2 < trackOrder.size());
-	std::swap(trackOrder[t1], trackOrder[t2]);
 }
 
 bool SyncDocument::isRowBookmark(int row) const
