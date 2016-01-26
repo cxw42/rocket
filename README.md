@@ -3,6 +3,7 @@ GNU Rocket
 
 [![Build status](https://ci.appveyor.com/api/projects/status/dfq8qaedc6mtsefg/branch/master?svg=true)](https://ci.appveyor.com/project/kusma/rocket/branch/master)
 [![Build status](https://travis-ci.org/kusma/rocket.svg?branch=master)](https://travis-ci.org/kusma/rocket)
+[![Coverity status](https://scan.coverity.com/projects/4770/badge.svg)](https://scan.coverity.com/projects/kusma-rocket)
 
 GNU Rocket is an intuitive new way of... bah, whatever. It's a sync-tracker,
 a tool for synchronizing music and visuals in demoscene productions. It
