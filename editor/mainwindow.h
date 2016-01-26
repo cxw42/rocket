@@ -48,7 +48,7 @@ public:
 
 	QTabWidget *tabWidget;
 	QList<TrackView *> trackViews;
-	TrackView *defaultTrackView, *trackView;
+	TrackView *defaultTrackView, *currentTrackView;
 
 	QLabel *statusPos, *statusValue, *statusKeyType;
 	QMenu *fileMenu, *recentFilesMenu, *editMenu;
