@@ -65,6 +65,14 @@ void ClientSocket::sendSaveCommand()
 	sendData(data);
 }
 
+void ClientSocket::setPaused(bool pause)
+{
+	if (pause != paused) {
+		sendPauseCommand(pause);
+		paused = pause;
+	}
+}
+
 bool AbstractSocketClient::recv(char *buffer, qint64 length)
 {
 	// wait for enough data to arrive
