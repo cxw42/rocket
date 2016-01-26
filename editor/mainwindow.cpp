@@ -21,8 +21,7 @@
 
 MainWindow::MainWindow() :
 	QMainWindow(),
-	clientSocket(NULL),
-	clientIndex(0)
+	clientSocket(NULL)
 {
 	trackView = new TrackView(this);
 	setCentralWidget(trackView);
@@ -444,9 +443,6 @@ void MainWindow::onTrackRequested(const QString &trackName)
 	QObject::connect(t, SIGNAL(keyFrameChanged(const SyncTrack &, int)),
 	                 clientSocket, SLOT(onKeyFrameChanged(const SyncTrack &, int)));
 
-	// setup remap
-	clientSocket->clientTracks[trackName] = clientIndex++;
-
 	// send key frames
 	QMap<int, SyncTrack::TrackKey> keyMap = t->getKeyMap();
 	QMap<int, SyncTrack::TrackKey>::const_iterator it;
@@ -525,7 +521,6 @@ void MainWindow::onNewWsConnection()
 
 void MainWindow::onConnected()
 {
-	clientIndex = 0;
 	clientSocket->sendPauseCommand(trackView->paused);
 	clientSocket->sendSetRowCommand(trackView->getEditRow());
 	trackView->connected = true;
