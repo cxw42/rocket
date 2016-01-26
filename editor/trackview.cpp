@@ -848,7 +848,11 @@ void TrackView::keyPressEvent(QKeyEvent *event)
 	if (lineEdit->isHidden()) {
 		switch (event->key()) {
 		case Qt::Key_Backtab:
-			ctrlDown = false;
+			if (ctrlDown) {
+				// the main window will handle this
+				event->ignore();
+				return;
+			}
 			selecting = false;
 			// FALLTHROUGH
 		case Qt::Key_Left:
@@ -865,7 +869,11 @@ void TrackView::keyPressEvent(QKeyEvent *event)
 			return;
 
 		case Qt::Key_Tab:
-			ctrlDown = false;
+			if (ctrlDown) {
+				// the main window will handle this
+				event->ignore();
+				return;
+			}
 			selecting = false;
 			// FALLTHROUGH
 		case Qt::Key_Right:
@@ -936,7 +944,9 @@ void TrackView::keyPressEvent(QKeyEvent *event)
 	}
 
 	switch (event->key()) {
-	case Qt::Key_Delete: editClear(); return;
+	case Qt::Key_Delete:
+		editClear();
+		return;
 
 	case Qt::Key_Cancel:
 	case Qt::Key_Escape:
@@ -957,7 +967,7 @@ void TrackView::keyPressEvent(QKeyEvent *event)
 		return;
 	}
 
-	if (!readOnly && lineEdit->isHidden() && event->text().length() && doc->getTrackCount()) {
+	if (!readOnly && !ctrlDown && lineEdit->isHidden() && event->text().length() && doc->getTrackCount()) {
 		// no line-edit, check if input matches a double
 		QString str = event->text();
 		int pos = 0;
