@@ -22,15 +22,14 @@
 MainWindow::MainWindow() :
 	QMainWindow(),
 	clientSocket(NULL),
-	doc(NULL)
+	doc(NULL),
+	trackView(NULL)
 {
-	trackView = new TrackView(this);
-	setCentralWidget(trackView);
+	tabWidget = new QTabWidget(this);
+	connect(tabWidget, SIGNAL(currentChanged(int)),
+	        this, SLOT(onTabChanged(int)));
 
-	connect(trackView, SIGNAL(posChanged(int, int)),
-	        this, SLOT(onPosChanged(int, int)));
-	connect(trackView, SIGNAL(currValDirty()),
-	        this, SLOT(onCurrValDirty()));
+	setCentralWidget(tabWidget);
 
 	createMenuBar();
 	updateRecentFiles();
@@ -248,9 +247,12 @@ void MainWindow::setStatusKeyType(SyncTrack::TrackKey::KeyType keyType, bool val
 
 void MainWindow::setDocument(SyncDocument *newDoc)
 {
-	if (doc)
+	if (doc) {
+		QObject::disconnect(doc, SIGNAL(syncPageAdded(SyncPage *)),
+			this, SLOT(onSyncPageAdded(SyncPage *)));
 		QObject::disconnect(doc, SIGNAL(modifiedChanged(bool)),
 			this, SLOT(setWindowModified(bool)));
+	}
 
 	if (doc && clientSocket) {
 		// delete old key frames
@@ -285,14 +287,28 @@ void MainWindow::setDocument(SyncDocument *newDoc)
 		}
 	}
 
+	// recreate empty set of trackViews
+	setTrackView(NULL);
+	while (trackViews.count() > 0) {
+		TrackView *trackView = trackViews.front();
+		trackViews.removeFirst();
+		delete trackView;
+	}
+	trackViews.clear();
+	defaultTrackView = addTrackView(newDoc->getDefaultSyncPage());
+
+	for (int i = 0; i < newDoc->getSyncPageCount(); ++i)
+		addTrackView(newDoc->getSyncPage(i));
+
 	if (doc)
 		delete doc;
 	doc = newDoc;
 
+	QObject::connect(doc, SIGNAL(syncPageAdded(SyncPage *)),
+	                 this, SLOT(onSyncPageAdded(SyncPage *)));
 	QObject::connect(newDoc, SIGNAL(modifiedChanged(bool)),
 	                 this, SLOT(setWindowModified(bool)));
 
-	trackView->setDocument(newDoc);
 	trackView->dirtyCurrentValue();
 	trackView->viewport()->update();
 }
@@ -466,7 +482,7 @@ void MainWindow::onPosChanged(int col, int row)
 void MainWindow::onCurrValDirty()
 {
 	if (doc && doc->getTrackCount() > 0) {
-		const SyncTrack *t = doc->getDefaultSyncPage()->getTrack(trackView->getEditTrack());
+		const SyncTrack *t = trackView->page->getTrack(trackView->getEditTrack());
 		int row = trackView->getEditRow();
 
 		setStatusValue(t->getValue(row), true);
@@ -479,6 +495,54 @@ void MainWindow::onCurrValDirty()
 	} else {
 		setStatusValue(0.0f, false);
 		setStatusKeyType(SyncTrack::TrackKey::STEP, false);
+	}
+}
+
+TrackView *MainWindow::addTrackView(SyncPage *page)
+{
+	TrackView *trackView = new TrackView(page, NULL);
+
+	trackViews.append(trackView);
+	tabWidget->addTab(trackView, page->getName());
+
+	return trackView;
+}
+
+void MainWindow::setTrackView(TrackView *newTrackView)
+{
+	if (trackView) {
+		disconnect(trackView, SIGNAL(posChanged(int, int)),
+		           this,      SLOT(onPosChanged(int, int)));
+		disconnect(trackView, SIGNAL(currValDirty()),
+		           this,      SLOT(onCurrValDirty()));
+	}
+
+	trackView = newTrackView;
+
+	if (trackView) {
+		connect(trackView, SIGNAL(posChanged(int, int)),
+		        this,      SLOT(onPosChanged(int, int)));
+		connect(trackView, SIGNAL(currValDirty()),
+		        this,      SLOT(onCurrValDirty()));
+	}
+}
+
+void MainWindow::onSyncPageAdded(SyncPage *page)
+{
+	addTrackView(page);
+}
+
+void MainWindow::onTabChanged(int index)
+{
+	int row = 0;
+	if (trackView)
+		row = trackView->getEditRow();
+
+	setTrackView(index < 0 ? NULL : trackViews[index]);
+
+	if (trackView) {
+		trackView->setEditRow(row);
+		trackView->setFocus();
 	}
 }
 
@@ -512,7 +576,8 @@ void MainWindow::setPaused(bool pause)
 	if (clientSocket)
 		clientSocket->setPaused(pause);
 
-	trackView->setReadOnly(!pause);
+	for (int i = 0; i < trackViews.count(); ++i)
+		trackViews[i]->setReadOnly(!pause);
 }
 
 void MainWindow::onNewTcpConnection()
