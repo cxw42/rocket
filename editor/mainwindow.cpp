@@ -559,7 +559,7 @@ void MainWindow::onTabChanged(int index)
 void MainWindow::onTrackRequested(const QString &trackName)
 {
 	// find track
-	const SyncTrack *t = doc->findTrack(trackName.toUtf8());
+	SyncTrack *t = doc->findTrack(trackName.toUtf8());
 	if (!t)
 		t = doc->createTrack(trackName);
 
@@ -576,6 +576,8 @@ void MainWindow::onTrackRequested(const QString &trackName)
 	QMap<int, SyncTrack::TrackKey>::const_iterator it;
 	for (it = keyMap.constBegin(); it != keyMap.constEnd(); ++it)
 		clientSocket->sendSetKeyCommand(t->name.toUtf8().constData(), *it);
+
+	t->setActive(true);
 
 	currentTrackView->update();
 }
@@ -671,6 +673,7 @@ void MainWindow::onDisconnected()
 		                    clientSocket, SLOT(onKeyFrameChanged(const SyncTrack &, int, const SyncTrack::TrackKey &)));
 		QObject::disconnect(t, SIGNAL(keyFrameRemoved(const SyncTrack &, int)),
 		                    clientSocket, SLOT(onKeyFrameRemoved(const SyncTrack &, int)));
+		t->setActive(false);
 	}
 
 	if (clientSocket) {

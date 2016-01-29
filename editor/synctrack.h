@@ -8,7 +8,7 @@ class SyncTrack : public QObject {
 	Q_OBJECT
 public:
 	SyncTrack(const QString &name) :
-	    name(name)
+	    name(name), active(false)
 	{
 	}
 
@@ -144,11 +144,17 @@ public:
 
 	bool isActive() const
 	{
-		return receivers(SIGNAL(keyFrameChanged(const SyncTrack &, int, const SyncTrack::TrackKey &))) > 0;
+		return active;
+	}
+
+	void setActive(bool active)
+	{
+		this->active = active;
 	}
 
 	QString name;
 private:
+	bool active;
 	QMap<int, TrackKey> keys;
 
 signals:

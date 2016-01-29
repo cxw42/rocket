@@ -23,14 +23,7 @@ public:
 
 	void addTrack(SyncTrack *);
 
-	void swapTrackOrder(int t1, int t2)
-	{
-		Q_ASSERT(0 <= t1 && t1 < trackOrder.size());
-		Q_ASSERT(0 <= t2 && t2 < trackOrder.size());
-		std::swap(trackOrder[t1], trackOrder[t2]);
-		invalidateTrack(*trackOrder[t1]);
-		invalidateTrack(*trackOrder[t2]);
-	}
+	void swapTrackOrder(int t1, int t2);
 
 	SyncDocument *getDocument()
 	{
@@ -40,20 +33,33 @@ public:
 	const QString &getName() { return name; }
 
 public slots:
-	void invalidateTrack(const SyncTrack &track)
+	// TODO: tighter invalidation on all of these!
+	void onKeyFrameAdded(const SyncTrack &track, int)
 	{
-		int trackIndex = trackOrder.indexOf((SyncTrack*)&track);
-		Q_ASSERT(trackIndex >= 0);
-		emit trackVisualChanged(trackIndex);
+		invalidateTrack(track);
+	}
+
+	void onKeyFrameChanged(const SyncTrack &track, int, const SyncTrack::TrackKey &)
+	{
+		invalidateTrack(track);
+	}
+
+	void onKeyFrameRemoved(const SyncTrack &track, int)
+	{
+		invalidateTrack(track);
 	}
 
 private:
+	void invalidateTrack(const SyncTrack &track);
+	void invalidateTrackData(const SyncTrack &track, int start, int stop);
+
 	SyncDocument *document;
 	QString name;
 	QVector<SyncTrack *> trackOrder;
 
 signals:
-	void trackVisualChanged(int trackIndex);
+	void trackHeaderChanged(int trackIndex);
+	void trackDataChanged(int trackIndex, int start, int stop);
 };
 
 #endif // SYNCPAGE_H
