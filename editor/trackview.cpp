@@ -710,7 +710,7 @@ void TrackView::setRows(int rows)
 	SyncDocument *doc = getDocument();
 	Q_ASSERT(doc);
 
-	doc->setRows(rows);
+	doc->setRows(rows); // TODO reset the scroll bar tab size and bounds here
 	viewport()->update();
 	setEditRow(qMin(editRow, int(rows) - 1));
 }
