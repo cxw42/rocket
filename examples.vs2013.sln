@@ -11,6 +11,8 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Client|Win32 = Debug Client|Win32
 		Debug Client|x64 = Debug Client|x64
+		Debug Sync-edit|Win32 = Debug Sync-edit|Win32
+		Debug Sync-edit|x64 = Debug Sync-edit|x64
 		Debug|Win32 = Debug|Win32
 		Debug|x64 = Debug|x64
 		Release Client|Win32 = Release Client|Win32
@@ -23,6 +25,10 @@ Global
 		{96D91AAD-2F45-4CC6-A923-96B80E1C3CE3}.Debug Client|Win32.Build.0 = Debug Client|Win32
 		{96D91AAD-2F45-4CC6-A923-96B80E1C3CE3}.Debug Client|x64.ActiveCfg = Debug Client|x64
 		{96D91AAD-2F45-4CC6-A923-96B80E1C3CE3}.Debug Client|x64.Build.0 = Debug Client|x64
+		{96D91AAD-2F45-4CC6-A923-96B80E1C3CE3}.Debug Sync-edit|Win32.ActiveCfg = Debug Sync-edit|Win32
+		{96D91AAD-2F45-4CC6-A923-96B80E1C3CE3}.Debug Sync-edit|Win32.Build.0 = Debug Sync-edit|Win32
+		{96D91AAD-2F45-4CC6-A923-96B80E1C3CE3}.Debug Sync-edit|x64.ActiveCfg = Debug Sync-edit|x64
+		{96D91AAD-2F45-4CC6-A923-96B80E1C3CE3}.Debug Sync-edit|x64.Build.0 = Debug Sync-edit|x64
 		{96D91AAD-2F45-4CC6-A923-96B80E1C3CE3}.Debug|Win32.ActiveCfg = Debug|Win32
 		{96D91AAD-2F45-4CC6-A923-96B80E1C3CE3}.Debug|Win32.Build.0 = Debug|Win32
 		{96D91AAD-2F45-4CC6-A923-96B80E1C3CE3}.Debug|x64.ActiveCfg = Debug|x64
@@ -39,6 +45,10 @@ Global
 		{5866042C-7FCB-4DB1-BAAD-44DF6567511F}.Debug Client|Win32.Build.0 = Debug Client|Win32
 		{5866042C-7FCB-4DB1-BAAD-44DF6567511F}.Debug Client|x64.ActiveCfg = Debug Client|x64
 		{5866042C-7FCB-4DB1-BAAD-44DF6567511F}.Debug Client|x64.Build.0 = Debug Client|x64
+		{5866042C-7FCB-4DB1-BAAD-44DF6567511F}.Debug Sync-edit|Win32.ActiveCfg = Debug Sync-edit|Win32
+		{5866042C-7FCB-4DB1-BAAD-44DF6567511F}.Debug Sync-edit|Win32.Build.0 = Debug Sync-edit|Win32
+		{5866042C-7FCB-4DB1-BAAD-44DF6567511F}.Debug Sync-edit|x64.ActiveCfg = Debug Sync-edit|x64
+		{5866042C-7FCB-4DB1-BAAD-44DF6567511F}.Debug Sync-edit|x64.Build.0 = Debug Sync-edit|x64
 		{5866042C-7FCB-4DB1-BAAD-44DF6567511F}.Debug|Win32.ActiveCfg = Debug|Win32
 		{5866042C-7FCB-4DB1-BAAD-44DF6567511F}.Debug|Win32.Build.0 = Debug|Win32
 		{5866042C-7FCB-4DB1-BAAD-44DF6567511F}.Debug|x64.ActiveCfg = Debug|x64

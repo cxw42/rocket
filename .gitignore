@@ -17,6 +17,7 @@ ui_*.h
 *~
 /Debug Client/
 /Debug/
+/Debug Sync-edit/
 /Release Client/
 /Release/
 /editor/Makefile*
@@ -31,6 +32,7 @@ ui_*.h
 /examples/example_bass
 /examples/Debug Client/
 /examples/Debug/
+/examples/Debug Sync-edit/
 /examples/Release Client/
 /examples/Release/
 /examples/x64/
@@ -39,6 +41,7 @@ ui_*.h
 /examples/lib64/
 /lib/Debug Client/
 /lib/Debug/
+/lib/Debug Sync-edit/
 /lib/Release Client/
 /lib/Release/
 /lib/x64/

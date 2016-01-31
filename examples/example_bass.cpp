@@ -22,7 +22,7 @@
 
 static const float bpm = 150.0f; /* beats per minute */
 static const int rpb = 8; /* rows per beat */
-static const double row_rate = (double(bpm) / 60) * rpb;
+static const double row_rate = (double(bpm) / 60) * rpb; /* rows per second */
 
 static double bass_get_row(HSTREAM h)
 {
