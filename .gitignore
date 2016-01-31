@@ -45,3 +45,6 @@ ui_*.h
 /packages/
 /x64/
 build-*
+editor/object_script.editor.*
+**/*.dll
+
