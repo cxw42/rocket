@@ -15,35 +15,27 @@ ui_*.h
 .DS_Store
 .qmake.stash
 *~
-/Debug Client/
-/Debug/
-/Debug Sync-edit/
-/Release Client/
-/Release/
-/editor/Makefile*
-/editor/editor.vcproj
-/editor/editor.vcxproj
-/editor/editor.vcxproj.filters
-/editor/editor.sln
+/Debug Edit/
+/Debug Runtime/
+/Release Edit/
+/Release Runtime/
 /editor/debug/
 /editor/release/
 /editor/editor/
 /editor/editor.app/
 /examples/example_bass
-/examples/Debug Client/
-/examples/Debug/
-/examples/Debug Sync-edit/
-/examples/Release Client/
-/examples/Release/
+/examples/Debug Edit/
+/examples/Debug Runtime/
+/examples/Release Edit/
+/examples/Release Runtime/
 /examples/x64/
 /examples/include/
 /examples/lib/
 /examples/lib64/
-/lib/Debug Client/
-/lib/Debug/
-/lib/Debug Sync-edit/
-/lib/Release Client/
-/lib/Release/
+/lib/Debug Edit/
+/lib/Debug Runtime/
+/lib/Release Edit/
+/lib/Release Runtime/
 /lib/x64/
 /packages/
 /x64/

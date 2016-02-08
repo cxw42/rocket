@@ -1,28 +1,33 @@
 <sync rows="2560">
 	<tracks>
 		<track name="clear.r">
-			<key value="0" interpolation="1" row="0"/>
-			<key value="1" interpolation="2" row="127"/>
-			<key value="0" interpolation="0" row="2559"/>
+			<key interpolation="1" value="0" row="0"/>
+			<key interpolation="2" value="1" row="127"/>
+			<key interpolation="3" value="0" row="452"/>
+			<key interpolation="0" value="1" row="2559"/>
 		</track>
 		<track name="clear.g">
-			<key value="0.5" interpolation="3" row="0"/>
-			<key value="1" interpolation="2" row="127"/>
-			<key value="0" interpolation="0" row="2559"/>
+			<key interpolation="3" value="0.5" row="0"/>
+			<key interpolation="2" value="1" row="127"/>
+			<key interpolation="3" value="0" row="452"/>
+			<key interpolation="0" value="1" row="2559"/>
 		</track>
 		<track name="clear.b">
-			<key value="0.5" interpolation="2" row="0"/>
-			<key value="0" interpolation="0" row="2559"/>
+			<key interpolation="2" value="0.5" row="0"/>
+			<key interpolation="3" value="0" row="452"/>
+			<key interpolation="0" value="1" row="2559"/>
 		</track>
 		<track name="cam.rot">
-			<key value="0" interpolation="3" row="0"/>
-			<key value="1" interpolation="1" row="127"/>
-			<key value="360" interpolation="0" row="2559"/>
+			<key interpolation="3" value="0" row="0"/>
+			<key interpolation="1" value="1" row="127"/>
+			<key interpolation="0" value="360" row="2559"/>
 		</track>
 		<track name="cam.dist">
-			<key value="-10" interpolation="2" row="0"/>
-			<key value="0" interpolation="2" row="80"/>
-			<key value="-10" interpolation="2" row="127"/>
+			<key interpolation="2" value="-10" row="0"/>
+			<key interpolation="2" value="0" row="80"/>
+			<key interpolation="2" value="-10" row="127"/>
+			<key interpolation="2" value="-20" row="269"/>
+			<key interpolation="0" value="1" row="2559"/>
 		</track>
 	</tracks>
 	<bookmarks/>
