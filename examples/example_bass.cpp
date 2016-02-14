@@ -151,6 +151,11 @@ void draw_cube()
 
 int main(int argc, char *argv[])
 {
+#ifndef SYNC_PLAYER
+	bool should_save = false;	// whether to save tracks when done.
+								// don't save unless we actually connect.
+#endif
+
 	HSTREAM stream;
 
 	const struct sync_track *clear_r, *clear_g, *clear_b;
@@ -190,8 +195,10 @@ int main(int argc, char *argv[])
 	while (!done) {
 		double row = bass_get_row(stream);
 #ifndef SYNC_PLAYER
-		if (sync_update(rocket, (int)floor(row), &bass_cb, (void *)&stream))
-			sync_connect(rocket, "localhost", SYNC_DEFAULT_PORT);
+		if (sync_update(rocket, (int)floor(row), &bass_cb, (void *)&stream)) {
+			if (sync_connect(rocket, "localhost", SYNC_DEFAULT_PORT) == 0)
+				should_save = true;
+		}
 #endif
 
 		/* draw */
@@ -233,7 +240,8 @@ int main(int argc, char *argv[])
 	}
 
 #ifndef SYNC_PLAYER
-	sync_save_tracks(rocket);
+	if(should_save)		//don't clobber if user just ran it then hit Esc
+		sync_save_tracks(rocket);
 #endif
 	sync_destroy_device(rocket);
 
