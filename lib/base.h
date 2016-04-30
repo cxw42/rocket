@@ -24,8 +24,10 @@
   #define snprintf _snprintf
  #endif
  /* int is 32-bit for both x86 and x64 */
- typedef unsigned int uint32_t;
- #define UINT32_MAX UINT_MAX
+ #ifndef UINT32_MAX
+  typedef unsigned int uint32_t;
+  #define UINT32_MAX UINT_MAX
+ #endif
 #elif defined(__GNUC__)
  #include <stdint.h>
 #elif defined(M68000)

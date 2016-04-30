@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <math.h>
 #ifndef M_PI
-#define M_PI 3.141926
+#define M_PI 3.14159265358979323846
 #endif
 
 #include "sync.h"
@@ -38,7 +38,7 @@ double sync_get_val(const struct sync_track *t, double row)
 		return 0.0f;
 
 	irow = (int)floor(row);
-	idx = key_idx_floor(t, irow);
+    idx = key_idx_floor(t, irow);   /* keyframe closest before _row_ */
 
 	/* at the edges, return the first/last value */
 	if (idx < 0)
@@ -63,7 +63,9 @@ double sync_get_val(const struct sync_track *t, double row)
 }
 
 int sync_find_key(const struct sync_track *t, int row)
-{
+{   /*  Return the key index corresponding to _row_, if _row_ is a keyframe 
+        of _t_.  Otherwise, return the key index of the first key after
+        _row_, negated and with 1 subtracted. */
 	int lo = 0, hi = t->num_keys;
 
 	/* binary search, t->keys is sorted by row */
@@ -122,3 +124,27 @@ int sync_del_key(struct sync_track *t, int pos)
 	return 0;
 }
 #endif
+
+int sync_has_keys(const struct sync_track *t)
+{
+    return (t->num_keys > 0);
+}
+int sync_get_first_row_this_interval(const struct sync_track *t, double row)
+{   /* Return the row that starts this interval, which will always exist. */
+    int irow = (int)floor(row);
+    int key_idx = key_idx_floor(t, irow);
+    return t->keys[key_idx].row;
+}
+
+
+int sync_get_first_row_next_interval(const struct sync_track *t, double row)
+{   /*  Return the row that starts the next interval, which may not
+        exist.  If not, return -1. */
+    int irow = (int)floor(row);
+    int key_idx = key_idx_floor(t, irow);
+
+    if (key_idx < (t->num_keys - 1))
+        return t->keys[key_idx + 1].row;
+    else    /* was the last interval */
+        return (-1);
+}

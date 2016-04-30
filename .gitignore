@@ -8,6 +8,7 @@
 *.user
 *.sdf
 *.opensdf
+*.lnk
 moc_*.cpp
 qrc_*.cpp
 ui_*.h
