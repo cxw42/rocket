@@ -160,7 +160,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;SYNC_PLAYER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -169,7 +169,7 @@
       <OutputFile>$(OutDir)$(ProjectName)-playerd.lib</OutputFile>
     </Lib>
     <PostBuildEvent>
-      <Command>copy $(OutDir)$(ProjectName)-playerd.lib $(OutDir)..\$(ProjectName)-playerd.lib</Command>
+      <Command>xcopy /f /y "$(OutDir)$(ProjectName)-playerd.lib" "$(OutDir)..\$(ProjectName)-playerd.lib"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Put the library where it will be used by respawn</Message>
@@ -203,7 +203,7 @@
       <OutputFile>$(OutDir)$(ProjectName)d.lib</OutputFile>
     </Lib>
     <PostBuildEvent>
-      <Command>copy $(OutDir)$(ProjectName)d.lib $(OutDir)..\$(ProjectName)d.lib</Command>
+      <Command>xcopy /f /y "$(OutDir)$(ProjectName)d.lib" "$(OutDir)..\$(ProjectName)d.lib"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Put the library where respawn can find it</Message>
