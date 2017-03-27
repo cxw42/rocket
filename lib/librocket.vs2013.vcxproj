@@ -168,6 +168,12 @@
     <Lib>
       <OutputFile>$(OutDir)$(ProjectName)-playerd.lib</OutputFile>
     </Lib>
+    <PostBuildEvent>
+      <Command>copy $(OutDir)$(ProjectName)-playerd.lib $(OutDir)..\$(ProjectName)-playerd.lib</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Put the library where it will be used by respawn</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Runtime|Win32'">
     <ClCompile>
@@ -196,6 +202,12 @@
       <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)d.lib</OutputFile>
     </Lib>
+    <PostBuildEvent>
+      <Command>copy $(OutDir)$(ProjectName)d.lib $(OutDir)..\$(ProjectName)d.lib</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Put the library where respawn can find it</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Edit|Win32'">
     <ClCompile>
